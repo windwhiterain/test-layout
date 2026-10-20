@@ -1,0 +1,17 @@
+# The test layout this repository is held to.
+#
+# A crate carries at most two test binaries: the lib's own inline one, and one
+# external binary holding every integration area. This file states the second
+# half; the inline half is the library's own target and is not counted here.
+#
+# The rule and the reason for it are in the repository that uses this file.
+
+[layout]
+# The external test binaries one crate may carry. Cargo links one per
+# `tests/*.rs` and per `tests/<dir>/main.rs`, so an area per file is a binary per
+# area, each statically linking the whole stack the crate depends on.
+max_external_test_binaries = 1
+
+# Packages this rule does not govern, by name. A crate that is not a workspace
+# member has its own manifest and its own rule.
+exempt = []

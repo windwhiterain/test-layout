@@ -1,0 +1,17 @@
+[package]
+name = "test-layout-check"
+description = "Checks a Cargo workspace's test layout: a crate carries one external test binary, not one per area."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "test-layout-check"
+path = "src/bin/test-layout-check.rs"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+toml = { workspace = true }
