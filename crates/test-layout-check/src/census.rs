@@ -105,7 +105,7 @@ pub fn read(root: &Path) -> Result<Census, CensusError> {
 /// The path as the filesystem names it, so two spellings of one directory
 /// compare equal: Cargo answers with absolute paths, and a walk produces the
 /// ones it started from.
-fn canonical(path: &Path) -> PathBuf {
+pub fn canonical(path: &Path) -> PathBuf {
     path.canonicalize().unwrap_or_else(|_| path.to_path_buf())
 }
 

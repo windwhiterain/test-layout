@@ -32,7 +32,10 @@ pub struct Checker {
 impl Checker {
     pub fn new(root: impl Into<PathBuf>, policy: Policy) -> Self {
         Checker {
-            root: root.into(),
+            // The root is spelled the way the census spells it, so a package's
+            // path is read as a path inside the root rather than as an absolute
+            // one -- which is what an exemption pattern is written against.
+            root: census::canonical(&root.into()),
             policy,
         }
     }
@@ -67,8 +70,15 @@ impl Checker {
 
 /// A path as the root names it, with `/` between the segments, so a pattern
 /// states one place in the tree rather than one spelling of it.
-fn relative_to(root: &Path, path: &Path) -> String {
-    let relative = path.strip_prefix(root).unwrap_or(path);
+///
+/// Both sides are spelled as the filesystem names them, because the census
+/// answers with absolute paths and a caller may name the root any way at all:
+/// without that, a path is read as absolute and no exemption pattern matches
+/// it.
+pub fn relative_to(root: &Path, path: &Path) -> String {
+    let root = census::canonical(root);
+    let path = census::canonical(path);
+    let relative = path.strip_prefix(&root).unwrap_or(&path);
     relative
         .components()
         .map(|component| component.as_os_str().to_string_lossy().to_string())

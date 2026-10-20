@@ -75,6 +75,20 @@ fn a_folded_report_counts_what_it_leaves_out() {
 }
 
 #[test]
+fn a_package_path_is_read_inside_the_root() {
+    // The census answers with absolute paths and a caller may name the root any
+    // way at all, so a path that is not read inside the root cannot be matched
+    // by an exemption -- which is how a nested checkout of the same repository
+    // stopped being exempt.
+    let root = std::path::Path::new("../..");
+    let package = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+    assert_eq!(
+        test_layout_check::relative_to(root, package),
+        "crates/test-layout-check"
+    );
+}
+
+#[test]
 fn this_repository_carries_one_external_test_binary() {
     // The repository under test is the tool's own: one crate, one binary.
     let root = env!("CARGO_MANIFEST_DIR");
